@@ -20,6 +20,7 @@ public class RelaxedEpochClockModel extends UCRelaxedClockModel {
 	
 	@Override
 	public void initAndValidate() {
+		super.initAndValidate();
 		meanRate = meanRateInput.get();
 		epochTimeTops = epochTimeTopsInput.get();
 		relativeRates = relativeRateInput.get();
