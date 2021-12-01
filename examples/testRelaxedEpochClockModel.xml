@@ -48,6 +48,7 @@ name="alignment">
         <parameter id="freqParameter.s:dna" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
         <stateNode id="rateCategories.c:clock" spec="parameter.IntegerParameter" dimension="18">1</stateNode>
         <parameter id="ucldStdev.c:clock" spec="parameter.RealParameter" lower="0.0" name="stateNode">0.1</parameter>
+        <stateNode idref="relativeRates.c:dna"/>
     </state>
 
     <init id="RandomTree.t:dna" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree.t:dna" taxa="@dna">
@@ -85,7 +86,7 @@ name="alignment">
                     </LogNormal>
                     <parameter id="clockRate.c:dna" estimate="false" name="clock.rate">1e-3</parameter>
                     <parameter id="epochTimeTops.c:dna" estimate="false" name="epochTimeTops">60.0 65.0</parameter>
-                    <parameter id="relativeRates.c:dna" estimate="false" name="relativeRates">1.0 5.0 1.0</parameter>
+                    <parameter id="relativeRates.c:dna" estimate="true" lower="0.0" name="relativeRates">1.0 5.0 1.0</parameter>
                 </branchRateModel>
             </distribution>
         </distribution>
@@ -113,6 +114,10 @@ name="alignment">
         <parameter idref="freqParameter.s:dna"/>
     </operator>
 
+    <operator id="relativeRatesExchanger" spec="DeltaExchangeOperator" delta="0.01" weight="0.1">
+        <parameter idref="relativeRates.c:dna"/>
+    </operator>
+
     <logger id="tracelog" fileName="dna.log" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
         <log idref="posterior"/>
         <log idref="likelihood"/>
@@ -123,6 +128,7 @@ name="alignment">
         <log idref="birthRate.t:dna"/>
         <log idref="kappa.s:dna"/>
         <log idref="freqParameter.s:dna"/>
+        <log idref="relativeRates.c:dna"/>
     </logger>
 
     <logger id="screenlog" logEvery="1000">
@@ -130,6 +136,7 @@ name="alignment">
         <log id="ESS.0" spec="util.ESS" arg="@posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
+        <log idref="relativeRates.c:dna"/>
     </logger>
 
     <logger id="treelog.t:dna" fileName="$(tree).trees" logEvery="1000" mode="tree">

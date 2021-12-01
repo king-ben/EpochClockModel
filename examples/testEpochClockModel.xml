@@ -46,6 +46,7 @@ name="alignment">
         <parameter id="birthRate.t:dna" name="stateNode">1.0</parameter>
         <parameter id="kappa.s:dna" lower="0.0" name="stateNode">2.0</parameter>
         <parameter id="freqParameter.s:dna" dimension="4" lower="0.0" name="stateNode" upper="1.0">0.25</parameter>
+        <stateNode idref="relativeRates.c:dna"/>
     </state>
 
     <init id="RandomTree.t:dna" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree.t:dna" taxa="@dna">
@@ -80,7 +81,7 @@ name="alignment">
                 <branchRateModel id="EpochClock.c:dna" spec="epochclock.evolution.branchratemodel.EpochClockModel">
                     <parameter id="clockRate.c:dna" estimate="false" name="clock.rate">1e-3</parameter>
                     <parameter id="epochTimeTops.c:dna" estimate="false" name="epochTimeTops">60.0 65.0</parameter>
-                    <parameter id="relativeRates.c:dna" estimate="false" name="relativeRates">1.0 5.0 1.0</parameter>
+                    <parameter id="relativeRates.c:dna" estimate="true" lower="0.0" name="relativeRates">1.0 5.0 1.0</parameter>
                 </branchRateModel>
             </distribution>
         </distribution>
@@ -108,6 +109,10 @@ name="alignment">
         <parameter idref="freqParameter.s:dna"/>
     </operator>
 
+    <operator id="relativeRatesExchanger" spec="DeltaExchangeOperator" delta="0.01" weight="0.1">
+        <parameter idref="relativeRates.c:dna"/>
+    </operator>
+
     <logger id="tracelog" fileName="dna.log" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
         <log idref="posterior"/>
         <log idref="likelihood"/>
@@ -125,6 +130,7 @@ name="alignment">
         <log id="ESS.0" spec="util.ESS" arg="@posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
+        <log idref="relativeRates.c:dna"/>
     </logger>
 
     <logger id="treelog.t:dna" fileName="$(tree).trees" logEvery="1000" mode="tree">

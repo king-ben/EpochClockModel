@@ -71,4 +71,17 @@ public class RandomLocalEpochClockModel extends RandomLocalClockModel {
 		return rate * relativeRate;
 	}
 	
+	@Override
+	protected boolean requiresRecalculation() {
+		boolean recompute=super.requiresRecalculation();
+		if (relativeRateInput.get().somethingIsDirty()) {
+            recompute = true;
+            return true;
+		}
+        
+		return recompute;
+		
+	}
+	
+	
 }
